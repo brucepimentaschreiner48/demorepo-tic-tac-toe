@@ -8,6 +8,18 @@ public class Board
         [1] = "X",
         [2] = "O"
     };
+
+    private static readonly IList<ushort[]> WinningStates = new List<ushort[]>
+    {
+        new ushort[] {0, 1, 2},
+        new ushort[] {3, 4, 5},
+        new ushort[] {6, 7, 8},
+        new ushort[] {0, 3, 6},
+        new ushort[] {1, 4, 7},
+        new ushort[] {2, 5, 8},
+        new ushort[] {0, 4, 8},
+        new ushort[] {2, 4, 6},
+    };
     private readonly ushort[] _state = new ushort[9];
     private ushort _currentPlayer = 1;
 
@@ -32,6 +44,10 @@ public class Board
         }
 
         _state[move.Index] = _currentPlayer;
+        if (CheckGameEndCondition())
+        {
+            return null;
+        }
         _currentPlayer = (ushort)(_currentPlayer == 1 ? 2 : 1);
         return _currentPlayer;
     }
@@ -46,5 +62,32 @@ public class Board
             }
             Console.WriteLine(String.Join(" | ", _state.Skip(3 * row).Take(3).Select(n => Visualization[n])));
         }
+    }
+
+    private bool CheckGameEndCondition()
+    {
+        foreach (var pattern in WinningStates)
+        {
+            var result = pattern.Select(index => _state[index]).Aggregate(1, (acc, player) => acc * player);
+            if (result == 1)
+            {
+                Console.WriteLine($"Player 1 ({Visualization[1]}) wins!");
+                return true;
+            }
+
+            if (result == 8)
+            {
+                Console.WriteLine($"Player 2 ({Visualization[2]}) wins!");
+                return true;
+            }
+        }
+
+        if (_state.All(s => s != 0))
+        {
+            Console.WriteLine($"Game ends with a TIE!");
+            return true;
+        }
+
+        return false;
     }
 }
