@@ -3,7 +3,7 @@ namespace SampleApp;
 public class TicTacToe
 {
     private readonly Board _board = new Board();
-    private ushort _nextPlayer = 1;
+    private ushort? _nextPlayer = 1;
 
     public void Run()
     {
@@ -21,6 +21,9 @@ public class TicTacToe
         else
         {
             Console.WriteLine($"=> Move {move.Player} : {move.Index}");
+            _nextPlayer = _board.ApplyMove(move);
+            _board.Render();
+            Console.WriteLine();
         }
     }
 
@@ -38,7 +41,7 @@ public class TicTacToe
 
             if (ushort.TryParse(line, out var index))
             {
-                return new Move(_nextPlayer, index);
+                return new Move(_nextPlayer!.Value, index);
             }
         } while (true);
     }
