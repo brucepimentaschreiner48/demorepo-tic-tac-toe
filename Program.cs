@@ -1,1 +1,4 @@
-Console.WriteLine("Hello, World!");
+using SampleApp;
+
+var game = new TicTacToe();
+game.Run();
