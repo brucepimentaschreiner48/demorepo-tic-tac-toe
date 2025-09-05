@@ -9,13 +9,19 @@ public class Board
         [2] = "O"
     };
     private readonly ushort[] _state = new ushort[9];
-    private readonly ushort _currentPlayer = 1;
+    private ushort _currentPlayer = 1;
 
     public ushort? ApplyMove(Move move)
     {
         if (move.Player != _currentPlayer)
         {
             Console.WriteLine($"Invalid move for player {Visualization[move.Player]}. It is currently player {Visualization[_currentPlayer]} turn.");
+            return _currentPlayer;
+        }
+
+        if (move.Index > 8)
+        {
+            Console.WriteLine($"Position index has to be between 0 and 8");
             return _currentPlayer;
         }
 
@@ -26,7 +32,8 @@ public class Board
         }
 
         _state[move.Index] = _currentPlayer;
-        return (ushort)(_currentPlayer == 1 ? 2 : 1);
+        _currentPlayer = (ushort)(_currentPlayer == 1 ? 2 : 1);
+        return _currentPlayer;
     }
 
     public void Render()

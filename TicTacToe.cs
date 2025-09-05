@@ -13,18 +13,25 @@ public class TicTacToe
         _board.Render();
         Console.WriteLine();
 
-        var move = ReadMove();
-        if (move == null)
+        do
         {
-            Console.WriteLine("Quit.");
-        }
-        else
-        {
+            var move = ReadMove();
+            if (move == null)
+            {
+                Console.WriteLine("Quit.");
+                return;
+            }
+
             Console.WriteLine($"=> Move {move.Player} : {move.Index}");
             _nextPlayer = _board.ApplyMove(move);
             _board.Render();
             Console.WriteLine();
-        }
+
+            if (_nextPlayer == null)
+            {
+                return;
+            }
+        } while (true);
     }
 
     private Move? ReadMove()
